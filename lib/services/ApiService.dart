@@ -23,7 +23,7 @@ class ApiService {
       if (data is List) {
         return data;
       } else if (data is Map) {
-        return data['products'] ?? [];  // Adjust based on the actual key
+        return data['products'] ?? [];
       } else {
         throw Exception('Unexpected response format');
       }
@@ -41,12 +41,11 @@ class ApiService {
         // Decode the response body
         final Map<String, dynamic> data = json.decode(response.body);
 
-        // Check if the data contains the expected fields
-        if (data.isNotEmpty) {
-          debugPrint("$data");
-          return data; // Return the product data as a Map
+        // Access the nested product data
+        if (data['status'] == 'SUCCESS' && data.containsKey('product')) {
+          return data['product']; // Return the product data as a Map
         } else {
-          throw Exception('Unexpected response format: data is empty');
+          throw Exception('Unexpected response format: Data is empty or missing required fields');
         }
       } else {
         throw Exception('Failed to load product details: ${response.statusCode}');
@@ -56,4 +55,6 @@ class ApiService {
       throw Exception('Failed to load product details: $e');
     }
   }
+
+
 }
